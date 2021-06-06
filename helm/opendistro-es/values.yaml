@@ -34,7 +34,7 @@ kibana:
 
   elasticsearchAccount:
     secret: ""
-    keyPassphrase:
+    keyPassphrase: 
       enabled: false
 
   extraEnvs: []
@@ -60,17 +60,17 @@ kibana:
 
   ssl:
     kibana:
-      enabled: false
-      existingCertSecret:
-      existingCertSecretCertSubPath: kibana-crt.pem
+      enabled: true 
+      existingCertSecret: kibana-secret
+      existingCertSecretCertSubPath: kibana.pem
       existingCertSecretKeySubPath: kibana-key.pem
-      existingCertSecretRootCASubPath: kibana-root-ca.pem
+      existingCertSecretRootCASubPath: root-ca.pem
     elasticsearch:
-      enabled: false
-      existingCertSecret:
-      existingCertSecretCertSubPath: elk-rest-crt.pem
-      existingCertSecretKeySubPath: elk-rest-key.pem
-      existingCertSecretRootCASubPath: elk-rest-root-ca.pem
+      enabled: true
+      existingCertSecret: kibanarest-secret
+      existingCertSecretCertSubPath: rest.pem
+      existingCertSecretKeySubPath: rest-key.pem
+      existingCertSecretRootCASubPath: root-ca.pem
 
 
 
@@ -96,20 +96,20 @@ kibana:
     type: NodePort
     annotations: {}
 
-  config: {}
+  config:
     ## Default Kibana configuration from kibana-docker.
-    # server.name: kibana
-    # server.host: "0"
+    server.name: kibana
+    server.host: "0.0.0.0"
 
     ## Replace with Elasticsearch DNS name picked during Service deployment
-    # elasticsearch.hosts: ${ELASTIC_URL}
-    # elasticsearch.requestTimeout: 360000
+    elasticsearch.hosts: ${ELASTIC_URL}
+    elasticsearch.requestTimeout: 360000
 
     ## Kibana TLS Config
-    # server.ssl.enabled: true
-    # server.ssl.key: /usr/share/kibana/certs/kibana-key.pem
-    # server.ssl.certificate: /usr/share/kibana/certs/kibana-crt.pem
-    # elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/certs/kibana-root-ca.pem
+    server.ssl.enabled: true
+    server.ssl.key: /usr/share/kibana/certs/kibana-key.pem
+    server.ssl.certificate: /usr/share/kibana/certs/kibana.pem
+    elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/certs/root-ca.pem
 
     # opendistro_security.cookie.secure: true
     # opendistro_security.cookie.password: ${COOKIE_PASS}
@@ -163,12 +163,12 @@ elasticsearch:
   securityConfig:
     enabled: true
     path: "/usr/share/elasticsearch/plugins/opendistro_security/securityconfig"
-    actionGroupsSecret:
-    configSecret:
-    internalUsersSecret:
-    rolesSecret:
-    rolesMappingSecret:
-    tenantsSecret:
+    actionGroupsSecret: action-groups-secret
+    configSecret: config-secret
+    internalUsersSecret: internal-users-secret
+    rolesSecret: roles-secret
+    rolesMappingSecret: roles-mapping-secret
+    tenantsSecret: tenants-secret
     #The following option simplifies securityConfig by using a single secret and specifying the respective secrets in the corresponding files instead of creating different secrets for config,internal users, roles, roles mapping and tenants
     #Note that this is an alternative to the above secrets and shouldn't be used if the above secrets are used
     config:
@@ -224,23 +224,22 @@ elasticsearch:
   ssl:
     ## TLS is mandatory for the transport layer and can not be disabled
     transport:
-      existingCertSecret:
-      existingCertSecretCertSubPath: elk-transport-crt.pem
-      existingCertSecretKeySubPath: elk-transport-key.pem
-      existingCertSecretRootCASubPath: elk-transport-root-ca.pem
+      existingCertSecret: trans-secret
+      existingCertSecretCertSubPath: trans.pem
+      existingCertSecretKeySubPath: trns-key.pem
+      existingCertSecretRootCASubPath: root-ca.pem
     rest:
-      enabled: false
-      existingCertSecret:
-      existingCertSecretCertSubPath: elk-rest-crt.pem
-      existingCertSecretKeySubPath: elk-rest-key.pem
-      existingCertSecretRootCASubPath: elk-rest-root-ca.pem
+      enabled: true
+      existingCertSecret: rest-secret
+      existingCertSecretCertSubPath: rest.pem
+      existingCertSecretKeySubPath: rest-key.pem
+      existingCertSecretRootCASubPath: root-ca.pem
     admin:
-      enabled: false
-      existingCertSecret:
-      existingCertSecretCertSubPath: admin-crt.pem
+      enabled: true
+      existingCertSecret: admin-secret
+      existingCertSecretCertSubPath: admin.pem
       existingCertSecretKeySubPath: admin-key.pem
-      existingCertSecretRootCASubPath: admin-root-ca.pem
-
+      existingCertSecretRootCASubPath: root-ca.pem
   master:
     enabled: true
     replicas: 1
@@ -456,56 +455,61 @@ elasticsearch:
     #              role: client
     podAnnotations: {}
 
-  config: {}
+  config:
     ## Example Config
-    # opendistro_security.allow_unsafe_democertificates: false
-    # opendistro_security.allow_default_init_securityindex: true
-    # opendistro_security.audit.type: internal_elasticsearch
-    # opendistro_security.enable_snapshot_restore_privilege: true
-    # opendistro_security.check_snapshot_restore_write_privileges: true
-    # cluster.routing.allocation.disk.threshold_enabled: false
-    # opendistro_security.audit.config.disabled_rest_categories: NONE
-    # opendistro_security.audit.config.disabled_transport_categories: NONE
-    # cluster:
-    #   name: ${CLUSTER_NAME}
-    # node:
-    #   master: ${NODE_MASTER}
-    #   data: ${NODE_DATA}
-    #   name: ${NODE_NAME}
-    #   ingest: ${NODE_INGEST}
-    #   max_local_storage_nodes: 1
-    #   attr.box_type: hot
+      opendistro_security.allow_unsafe_democertificates: false
+      opendistro_security.allow_default_init_securityindex: true
+      opendistro_security.audit.type: internal_elasticsearch
+      opendistro_security.enable_snapshot_restore_privilege: true
+      opendistro_security.check_snapshot_restore_write_privileges: true
+      cluster.routing.allocation.disk.threshold_enabled: false
+      opendistro_security.audit.config.disabled_rest_categories: NONE
+      opendistro_security.audit.config.disabled_transport_categories: NONE
+      cluster:
+        name: ${CLUSTER_NAME}
+      node:
+        master: ${NODE_MASTER}
+        data: ${NODE_DATA}
+        name: ${NODE_NAME}
+        ingest: ${NODE_INGEST}
+        max_local_storage_nodes: 1
+        attr.box_type: hot
 
-    # processors: ${PROCESSORS:1}
+      processors: ${PROCESSORS:1}
 
-    # network.host: ${NETWORK_HOST}
+      network.host: ${NETWORK_HOST}
 
-    # thread_pool.bulk.queue_size: 800
+      thread_pool.bulk.queue_size: 800
 
-    # path:
-    #   data: /usr/share/elasticsearch/data
-    #   logs: /usr/share/elasticsearch/logs
+      path:
+        data: /usr/share/elasticsearch/data
+        logs: /usr/share/elasticsearch/logs
 
-    # http:
-    #   enabled: ${HTTP_ENABLE}
-    #   compression: true
+      http:
+        enabled: ${HTTP_ENABLE}
+        compression: true
 
-    # discovery:
-    #   zen:
-    #     ping.unicast.hosts: ${DISCOVERY_SERVICE}
-    #     minimum_master_nodes: ${NUMBER_OF_MASTERS}
+      discovery:
+        zen:
+          ping.unicast.hosts: ${DISCOVERY_SERVICE}
+          minimum_master_nodes: ${NUMBER_OF_MASTERS}
 
     # # TLS Configuration Transport Layer
-    # opendistro_security.ssl.transport.pemcert_filepath: elk-transport-crt.pem
-    # opendistro_security.ssl.transport.pemkey_filepath: elk-transport-key.pem
-    # opendistro_security.ssl.transport.pemtrustedcas_filepath: elk-transport-root-ca.pem
-    # opendistro_security.ssl.transport.enforce_hostname_verification: false
+      opendistro_security.ssl.transport.pemcert_filepath: trans.pem
+      opendistro_security.ssl.transport.pemkey_filepath: trns-key.pem
+      opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.ssl.transport.enforce_hostname_verification: false
 
     # # TLS Configuration REST Layer
-    # opendistro_security.ssl.http.enabled: true
-    # opendistro_security.ssl.http.pemcert_filepath: elk-rest-crt.pem
-    # opendistro_security.ssl.http.pemkey_filepath: elk-rest-key.pem
-    # opendistro_security.ssl.http.pemtrustedcas_filepath: elk-rest-root-ca.pem
+      opendistro_security.ssl.http.enabled: true
+      opendistro_security.ssl.http.pemcert_filepath: rest.pem
+      opendistro_security.ssl.http.pemkey_filepath: rest-key.pem
+      opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.authcz.admin_dn:
+         - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
+      opendistro_security.nodes_dn:
+         - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
+         #- 'CN=node2.example.com,OU=UNIT,O=ORG,L=TORONTO,C=CA'
 
   log4jConfig: ""
 
