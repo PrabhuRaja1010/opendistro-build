@@ -96,7 +96,7 @@ kibana:
     type: NodePort
     annotations: {}
 
-  config: {}
+  config:
     ## Default Kibana configuration from kibana-docker.
     server.name: kibana
     server.host: "0.0.0.0"
@@ -455,7 +455,7 @@ elasticsearch:
     #              role: client
     podAnnotations: {}
 
-  config: {}
+  config:
     ## Example Config
       opendistro_security.allow_unsafe_democertificates: false
       opendistro_security.allow_default_init_securityindex: true
