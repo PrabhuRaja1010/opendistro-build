@@ -93,7 +93,7 @@ kibana:
     #      - chart-example.local
 
   service:
-    type: ClusterIP
+    type: NodePort
     annotations: {}
 
   config: {}
@@ -250,7 +250,7 @@ elasticsearch:
     ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
     ##
     persistence:
-      enabled: true
+      enabled: false
       ## A manually managed Persistent Volume and Claim
       ## Requires persistence.enabled: true
       ## If defined, PVC must be created manually before volume will be bound
@@ -260,7 +260,7 @@ elasticsearch:
       ## The subdirectory of the volume to mount to, useful in dev environments
       ## and one PV for multiple services.
       ##
-      subPath: ""
+      #subPath: ""
 
       ## Open Distro master Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
@@ -270,10 +270,10 @@ elasticsearch:
       ##   GKE, AWS & OpenStack)
       ##
       # storageClass: "-"
-      accessModes:
-        - ReadWriteOnce
-      size: 8Gi
-      annotations: {}
+      #accessModes:
+        #- ReadWriteOnce
+      #size: 8Gi
+      #annotations: {}
 
     resources: {}
     #  limits:
@@ -327,7 +327,7 @@ elasticsearch:
     ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
     ##
     persistence:
-      enabled: true
+      enabled: false
       ## A manually managed Persistent Volume and Claim
       ## Requires persistence.enabled: true
       ## If defined, PVC must be created manually before volume will be bound
@@ -337,7 +337,7 @@ elasticsearch:
       ## The subdirectory of the volume to mount to, useful in dev environments
       ## and one PV for multiple services.
       ##
-      subPath: ""
+      #subPath: ""
 
       ## Open Distro master Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
@@ -347,10 +347,10 @@ elasticsearch:
       ##   GKE, AWS & OpenStack)
       ##
       # storageClass: "-"
-      accessModes:
-        - ReadWriteOnce
-      size: 8Gi
-      annotations: {}
+      #accessModes:
+        #- ReadWriteOnce
+      #size: 8Gi
+      #annotations: {}
 
     resources: {}
     #  limits:
