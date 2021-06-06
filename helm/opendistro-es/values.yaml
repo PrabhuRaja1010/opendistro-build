@@ -102,7 +102,7 @@ kibana:
     server.host: "0.0.0.0"
 
     ## Replace with Elasticsearch DNS name picked during Service deployment
-    elasticsearch.hosts: ${ELASTIC_URL}
+    elasticsearch.hosts: opendistro-opendistro-es-client-service:9200
     elasticsearch.requestTimeout: 360000
 
     ## Kibana TLS Config
@@ -466,7 +466,7 @@ elasticsearch:
       opendistro_security.audit.config.disabled_rest_categories: NONE
       opendistro_security.audit.config.disabled_transport_categories: NONE
       cluster:
-        name: ${CLUSTER_NAME}
+        name: elasticsearch
       node:
         master: ${NODE_MASTER}
         data: ${NODE_DATA}
@@ -492,7 +492,7 @@ elasticsearch:
       discovery:
         zen:
           ping.unicast.hosts: ${DISCOVERY_SERVICE}
-          minimum_master_nodes: ${NUMBER_OF_MASTERS}
+          minimum_master_nodes: 1
 
     # # TLS Configuration Transport Layer
       opendistro_security.ssl.transport.pemcert_filepath: trans.pem
@@ -510,6 +510,7 @@ elasticsearch:
       opendistro_security.nodes_dn:
          - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
          #- 'CN=node2.example.com,OU=UNIT,O=ORG,L=TORONTO,C=CA'
+      opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
 
   log4jConfig: ""
 
