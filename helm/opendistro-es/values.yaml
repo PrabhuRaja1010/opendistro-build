@@ -102,7 +102,7 @@ kibana:
     server.host: "0.0.0.0"
 
     ## Replace with Elasticsearch DNS name picked during Service deployment
-    elasticsearch.hosts: opendistro-opendistro-es-client-service:9200
+    elasticsearch.hosts: http://opendistro-opendistro-es-client-service:9200
     elasticsearch.requestTimeout: 360000
 
     ## Kibana TLS Config
@@ -468,16 +468,16 @@ elasticsearch:
       cluster:
         name: elasticsearch
       node:
-        master: ${NODE_MASTER}
-        data: ${NODE_DATA}
-        name: ${NODE_NAME}
-        ingest: ${NODE_INGEST}
+        master: https://opendistro-opendistro-es-discovery:9300
+        data: https://opendistro-opendistro-es-data-svc:9600
+        name: opendistro.local.com
+        ingest: https://opendistro-opendistro-es-client-service:9200
         max_local_storage_nodes: 1
         attr.box_type: hot
 
       processors: ${PROCESSORS:1}
 
-      network.host: ${NETWORK_HOST}
+      network.host: 0.0.0.0
 
       thread_pool.bulk.queue_size: 800
 
@@ -486,12 +486,12 @@ elasticsearch:
         logs: /usr/share/elasticsearch/logs
 
       http:
-        enabled: ${HTTP_ENABLE}
+        #enabled: ${HTTP_ENABLE}
         compression: true
 
       discovery:
         zen:
-          ping.unicast.hosts: ${DISCOVERY_SERVICE}
+          #ping.unicast.hosts: ${DISCOVERY_SERVICE}
           minimum_master_nodes: 1
 
     # # TLS Configuration Transport Layer
