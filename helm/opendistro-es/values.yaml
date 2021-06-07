@@ -61,13 +61,13 @@ kibana:
   ssl:
     kibana:
       enabled: true 
-      existingCertSecret: kibana-secret
+      existingCertSecret: kibana1-secret
       existingCertSecretCertSubPath: kibana-crt.pem
       existingCertSecretKeySubPath: kibana-key.pem
       existingCertSecretRootCASubPath: kibana-root-ca.pem
     elasticsearch:
       enabled: true
-      existingCertSecret: kibanarest-secret
+      existingCertSecret: kibanarest1-secret
       existingCertSecretCertSubPath: elk-rest-crt.pem
       existingCertSecretKeySubPath: elk-rest-key.pem
       existingCertSecretRootCASubPath: elk-rest-root-ca.pem
@@ -100,9 +100,10 @@ kibana:
     ## Default Kibana configuration from kibana-docker.
     server.name: kibana
     server.host: "0.0.0.0"
-
+    elasticsearch.username: admin
+    elasticsearch.password: admin
     ## Replace with Elasticsearch DNS name picked during Service deployment
-    elasticsearch.hosts: https://opendistro-opendistro-es-client-service:9200
+    elasticsearch.hosts: https://opendistro1-opendistro-es-client-service:9200
     elasticsearch.requestTimeout: 360000
 
     ## Kibana TLS Config
@@ -224,19 +225,19 @@ elasticsearch:
   ssl:
     ## TLS is mandatory for the transport layer and can not be disabled
     transport:
-      existingCertSecret: trans-secret
-      existingCertSecretCertSubPath: elk-transport-key.pem
-      existingCertSecretKeySubPath: elk-transport-crt.pem
+      existingCertSecret: trans1-secret
+      existingCertSecretCertSubPath: elk-transport-crt.pem
+      existingCertSecretKeySubPath: elk-transport-key.pem
       existingCertSecretRootCASubPath: elk-transport-root-ca.pem
     rest:
       enabled: true
-      existingCertSecret: rest-secret
+      existingCertSecret: rest1-secret
       existingCertSecretCertSubPath: elk-rest-crt.pem
       existingCertSecretKeySubPath: elk-rest-key.pem
       existingCertSecretRootCASubPath: elk-rest-root-ca.pem
     admin:
       enabled: true
-      existingCertSecret: admin-secret
+      existingCertSecret: admin1-secret
       existingCertSecretCertSubPath: admin-crt.pem
       existingCertSecretKeySubPath: admin-key.pem
       existingCertSecretRootCASubPath: admin-root-ca.pem
@@ -458,36 +459,37 @@ elasticsearch:
   config:
     ## Example Config
       opendistro_security.allow_unsafe_democertificates: false
-      opendistro_security.allow_default_init_securityindex: true
+      #opendistro_security.audit.ignore_users: ["kibanaserver"]
+      opendistro_security.allow_default_init_securityindex: false
       opendistro_security.audit.type: internal_elasticsearch
       opendistro_security.enable_snapshot_restore_privilege: true
       opendistro_security.check_snapshot_restore_write_privileges: true
       cluster.routing.allocation.disk.threshold_enabled: false
-      opendistro_security.audit.config.disabled_rest_categories: NONE
-      opendistro_security.audit.config.disabled_transport_categories: NONE
+      #opendistro_security.audit.config.disabled_rest_categories: NONE
+      #opendistro_security.audit.config.disabled_transport_categories: NONE
       cluster:
-        name: elasticsearch
-      node:
-        master: https://opendistro-opendistro-es-discovery:9300
-        data: https://opendistro-opendistro-es-data-svc:9600
-        name: opendistro.local.com
-        ingest: https://opendistro-opendistro-es-client-service:9200
-        max_local_storage_nodes: 1
-        attr.box_type: hot
+         name: elasticsearch
+      #node:
+        #master: https://opendistro1-opendistro-es-discovery:9300
+        #data: https://opendistro1-opendistro-es-data-svc:9600
+        #name: opendistro.local.com
+        #ingest: https://opendistro1-opendistro-es-client-service:9200
+        #max_local_storage_nodes: 1
+        #attr.box_type: hot
 
-      processors: ${PROCESSORS:1}
+      #processors: ${PROCESSORS:1}
 
       network.host: 0.0.0.0
 
-      thread_pool.bulk.queue_size: 800
+        #thread_pool.bulk.queue_size: 800
 
       path:
         data: /usr/share/elasticsearch/data
         logs: /usr/share/elasticsearch/logs
 
-      http:
+      #http:
         #enabled: ${HTTP_ENABLE}
-        compression: true
+        #compression: true
 
       discovery:
         zen:
@@ -495,22 +497,27 @@ elasticsearch:
           minimum_master_nodes: 1
 
     # # TLS Configuration Transport Layer
-      opendistro_security.ssl.transport.pemcert_filepath: elk-transport-key.pem
-      opendistro_security.ssl.transport.pemkey_filepath: elk-transport-crt.pem
+      opendistro_security.ssl.transport.pemcert_filepath: elk-transport-crt.pem
+      opendistro_security.ssl.transport.pemkey_filepath: elk-transport-key.pem
       opendistro_security.ssl.transport.pemtrustedcas_filepath: elk-transport-root-ca.pem
+      #opendistro_security.ssl.transport.pemkey_password: prabhu
       opendistro_security.ssl.transport.enforce_hostname_verification: false
 
     # # TLS Configuration REST Layer
       opendistro_security.ssl.http.enabled: true
-      opendistro_security.ssl.http.pemcert_filepath: elk-rest-key.pem
-      opendistro_security.ssl.http.pemkey_filepath: elk-rest-crt.pem
+      opendistro_security.ssl.http.pemcert_filepath: elk-rest-crt.pem
+      opendistro_security.ssl.http.pemkey_filepath: elk-rest-key.pem
       opendistro_security.ssl.http.pemtrustedcas_filepath: elk-rest-root-ca.pem
+      #opendistro_security.ssl.http.pemkey_password: prabhu
       opendistro_security.authcz.admin_dn:
-         - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
+         - CN=admin,OU=AppSec,O=Amex,L=Phoenix,ST=Arizona,C=us
       opendistro_security.nodes_dn:
-         - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
+         - CN=opendistro.local.com,OU=AppSec,O=Amex,L=Phoenix,ST=Arizona,C=us
+        #- 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
          #- 'CN=node2.example.com,OU=UNIT,O=ORG,L=TORONTO,C=CA'
       opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
+      #opendistro_security.ssl.http.clientauth_mode: OPTIONAL
+      
 
   log4jConfig: ""
 
