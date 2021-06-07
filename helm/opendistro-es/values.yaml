@@ -62,15 +62,15 @@ kibana:
     kibana:
       enabled: true 
       existingCertSecret: kibana-secret
-      existingCertSecretCertSubPath: kibana.pem
+      existingCertSecretCertSubPath: kibana-crt.pem
       existingCertSecretKeySubPath: kibana-key.pem
-      existingCertSecretRootCASubPath: root-ca.pem
+      existingCertSecretRootCASubPath: kibana-root-ca.pem
     elasticsearch:
       enabled: true
       existingCertSecret: kibanarest-secret
-      existingCertSecretCertSubPath: rest.pem
-      existingCertSecretKeySubPath: rest-key.pem
-      existingCertSecretRootCASubPath: root-ca.pem
+      existingCertSecretCertSubPath: elk-rest-crt.pem
+      existingCertSecretKeySubPath: elk-rest-key.pem
+      existingCertSecretRootCASubPath: elk-rest-root-ca.pem
 
 
 
@@ -102,14 +102,14 @@ kibana:
     server.host: "0.0.0.0"
 
     ## Replace with Elasticsearch DNS name picked during Service deployment
-    elasticsearch.hosts: http://opendistro-opendistro-es-client-service:9200
+    elasticsearch.hosts: https://opendistro-opendistro-es-client-service:9200
     elasticsearch.requestTimeout: 360000
 
     ## Kibana TLS Config
     server.ssl.enabled: true
     server.ssl.key: /usr/share/kibana/certs/kibana-key.pem
-    server.ssl.certificate: /usr/share/kibana/certs/kibana.pem
-    elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/certs/root-ca.pem
+    server.ssl.certificate: /usr/share/kibana/certs/kibana-crt.pem
+    elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/certs/kibana-root-ca.pem
 
     # opendistro_security.cookie.secure: true
     # opendistro_security.cookie.password: ${COOKIE_PASS}
@@ -225,21 +225,21 @@ elasticsearch:
     ## TLS is mandatory for the transport layer and can not be disabled
     transport:
       existingCertSecret: trans-secret
-      existingCertSecretCertSubPath: trans.pem
-      existingCertSecretKeySubPath: trns-key.pem
-      existingCertSecretRootCASubPath: root-ca.pem
+      existingCertSecretCertSubPath: elk-transport-key.pem
+      existingCertSecretKeySubPath: elk-transport-crt.pem
+      existingCertSecretRootCASubPath: elk-transport-root-ca.pem
     rest:
       enabled: true
       existingCertSecret: rest-secret
-      existingCertSecretCertSubPath: rest.pem
-      existingCertSecretKeySubPath: rest-key.pem
-      existingCertSecretRootCASubPath: root-ca.pem
+      existingCertSecretCertSubPath: elk-rest-crt.pem
+      existingCertSecretKeySubPath: elk-rest-key.pem
+      existingCertSecretRootCASubPath: elk-rest-root-ca.pem
     admin:
       enabled: true
       existingCertSecret: admin-secret
-      existingCertSecretCertSubPath: admin.pem
+      existingCertSecretCertSubPath: admin-crt.pem
       existingCertSecretKeySubPath: admin-key.pem
-      existingCertSecretRootCASubPath: root-ca.pem
+      existingCertSecretRootCASubPath: admin-root-ca.pem
   master:
     enabled: true
     replicas: 1
@@ -495,16 +495,16 @@ elasticsearch:
           minimum_master_nodes: 1
 
     # # TLS Configuration Transport Layer
-      opendistro_security.ssl.transport.pemcert_filepath: trans.pem
-      opendistro_security.ssl.transport.pemkey_filepath: trns-key.pem
-      opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.ssl.transport.pemcert_filepath: elk-transport-key.pem
+      opendistro_security.ssl.transport.pemkey_filepath: elk-transport-crt.pem
+      opendistro_security.ssl.transport.pemtrustedcas_filepath: elk-transport-root-ca.pem
       opendistro_security.ssl.transport.enforce_hostname_verification: false
 
     # # TLS Configuration REST Layer
       opendistro_security.ssl.http.enabled: true
-      opendistro_security.ssl.http.pemcert_filepath: rest.pem
-      opendistro_security.ssl.http.pemkey_filepath: rest-key.pem
-      opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.ssl.http.pemcert_filepath: elk-rest-key.pem
+      opendistro_security.ssl.http.pemkey_filepath: elk-rest-crt.pem
+      opendistro_security.ssl.http.pemtrustedcas_filepath: elk-rest-root-ca.pem
       opendistro_security.authcz.admin_dn:
          - 'CN=opendistro.local.com,O=TEMP Corp,L=SALEM,C=IN'
       opendistro_security.nodes_dn:
