@@ -1,0 +1,6 @@
+https://aws.amazon.com/blogs/opensource/add-ssl-certificates-open-distro-for-elasticsearch/  - Add your own SSL certificates to Open Distro for Elasticsearch
+https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/      - Change your Admin Passwords in Open Distro for Elasticsearch
+https://aws.amazon.com/blogs/opensource/open-distro-for-elasticsearch-on-kubernetes/         - how to run k8s in eks with yamls
+https://www.elastic.co/blog/what-is-an-elasticsearch-index                                   - what is index in elastic
+https://stackoverflow.com/questions/59360003/how-to-configure-authorization-with-certificate-with-fluentd-and-elk-elasticstac  -- fleund with opendistro conf 
+https://deploy-master.seldon.io/docs/getting-started/production-installation/elasticsearch/opendistro/   - fluend to open-distro
